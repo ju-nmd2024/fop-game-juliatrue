@@ -1,5 +1,3 @@
-frameRate(30);
-
 let x = 200;
 let y = 200;
 
@@ -19,27 +17,32 @@ function setup() {
 
 function startScreen() {
   background(255, 227, 228);
-
+  push();
   fill(194, 29, 34);
   strokeWeight(5);
   stroke(125, 5, 9);
   rect(300, 250, 200, 100, 10);
   rect(150, 120, 500, 100, 10);
+  rect(330, 480, 140, 50, 10);
 
   noStroke();
-  fill(0);
-  textSize(24);
+  fill(255);
+  textSize(35);
   textFont("Verdana");
   textStyle(BOLD);
-  text("START GAME", 305, 300, 200);
   textAlign(CENTER, CENTER);
+  text("START", 300, 300, 200);
 
+  fill(0);
   textSize(32);
   text("A Ladybugs Adventure!", 150, 170, 500);
+  textSize(22);
+  text("RULES", 330, 505, 140);
 
   fill(125, 5, 9);
   textSize(12);
   text("made by julia", 300, 550, 200);
+  pop();
 }
 
 function flower(x, y) {
@@ -66,6 +69,35 @@ function flower(x, y) {
   stroke(194, 29, 34);
   strokeWeight(3);
   ellipse(0, 0, 40);
+
+  pop();
+}
+
+function rulesScreen() {
+  background(255, 227, 228);
+  push();
+  fill(194, 29, 34);
+  strokeWeight(5);
+  stroke(125, 5, 9);
+  rect(200, 100, 400, 250, 10);
+  rect(330, 480, 140, 50, 10);
+
+  noStroke();
+  fill(255);
+  textSize(34);
+  textStyle(BOLD);
+  textFont("Verdana");
+  textAlign(CENTER, CENTER);
+  text("RULES", 200, 150, 400);
+
+  textSize(16);
+  text("Make sure that the ladybug safely lands on the leaf.", 210, 200, 380);
+  text("Use the spacebar to fly.", 210, 245, 380);
+  text("And control its movement with the left", 210, 280, 380);
+  text("and right arrow keys.", 210, 300, 380);
+  fill(0);
+  textSize(22);
+  text("BACK", 330, 505, 140);
 
   pop();
 }
@@ -304,7 +336,9 @@ function leafRight(x, y) {
   pop();
 }
 
-let cloudSpeed = 1;
+function youWin() {}
+
+let cloudSpeed = 0.7;
 let state = "start";
 
 function draw() {
@@ -313,6 +347,12 @@ function draw() {
     flower(x - 30, y - 25);
     flower(x + 520, y + 50);
     flower(x + 50, y + 200);
+
+    push();
+    translate(600, 120);
+    scale(0.3);
+    ladybug(0, 0);
+    pop();
   } else if (state === "game") {
     environment();
     clouds(cloudsX, cloudsY);
@@ -322,36 +362,73 @@ function draw() {
 
     push();
     translate(characterX + 100, characterY);
-    scale(0.5);
+    scale(0.4);
     ladybug(0, 0, keyIsDown(32));
     pop();
 
     if (keyIsDown(32)) {
-      characterY = characterY - 2;
+      characterY = characterY - 1.5;
       velocityY = velocityY - 0.7;
     }
+    if (keyIsDown(37)) {
+      characterX = characterX - 2;
+    } else if (keyIsDown(39)) {
+      characterX = characterX + 2;
+    }
 
-    /*
-  // gravity
-  characterY = characterY + velocityY;
-  velocityY = velocityY + acceleration;
+    // gravity
+    characterY = characterY + velocityY;
+    velocityY = velocityY + acceleration;
 
-  // clouds moving, and bouncing
-  cloudsX = cloudsX + 1;
-  if (cloudsX > 800) {
-    cloudsX = -600;
-  }
+    // clouds moving, and bouncing
+    cloudsX = cloudsX + 0.7;
+    if (cloudsX > 800) {
+      cloudsX = -600;
+    }
 
-  cloudsY = cloudsY + cloudSpeed / 2;
-  if (cloudsY > 200 || cloudsY < 170) {
-    cloudSpeed = cloudSpeed * -1;
-  }
-    */
+    cloudsY = cloudsY + cloudSpeed / 4;
+    if (cloudsY > 200 || cloudsY < 170) {
+      cloudSpeed = cloudSpeed * -1;
+    }
+
+    // character stops if it lands on the leaf
+    if (
+      characterX >= 300 &&
+      characterX <= 500 &&
+      characterY >= 470 &&
+      characterY <= 540
+    ) {
+      velocityY = 0;
+    }
+  } else if (state === "rules") {
+    rulesScreen();
   }
 }
 
 function mouseClicked() {
-  if (mouseX >= 300 && mouseX <= 500 && mouseY >= 250 && mouseY <= 350) {
+  if (
+    state === "start" &&
+    mouseX >= 300 &&
+    mouseX <= 500 &&
+    mouseY >= 250 &&
+    mouseY <= 350
+  ) {
     state = "game";
+  } else if (
+    state === "start" &&
+    mouseX >= 330 &&
+    mouseX <= 470 &&
+    mouseY >= 480 &&
+    mouseY <= 530
+  ) {
+    state = "rules";
+  } else if (
+    state === "rules" &&
+    mouseX >= 330 &&
+    mouseX <= 470 &&
+    mouseY >= 480 &&
+    mouseY <= 530
+  ) {
+    state = "start";
   }
 }
