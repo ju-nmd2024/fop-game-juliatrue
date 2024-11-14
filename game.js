@@ -1,13 +1,82 @@
+frameRate(30);
+
 let x = 200;
 let y = 200;
 
-function ladybug(x, y, flying) {
+let characterX = 300;
+let characterY = 200;
+
+let cloudsX = 100;
+let cloudsY = 200;
+
+// gravity variables
+let velocityY = 0.2;
+let acceleration = 0.2;
+
+function setup() {
+  createCanvas(800, 600);
+}
+
+function startScreen() {
+  background(255, 227, 228);
+
+  fill(194, 29, 34);
+  strokeWeight(5);
+  stroke(125, 5, 9);
+  rect(300, 250, 200, 100, 10);
+  rect(150, 120, 500, 100, 10);
+
+  noStroke();
+  fill(0);
+  textSize(24);
+  textFont("Verdana");
+  textStyle(BOLD);
+  text("START GAME", 305, 300, 200);
+  textAlign(CENTER, CENTER);
+
+  textSize(32);
+  text("A Ladybugs Adventure!", 150, 170, 500);
+
+  fill(125, 5, 9);
+  textSize(12);
+  text("made by julia", 300, 550, 200);
+}
+
+function flower(x, y) {
+  push();
+  translate(x - 50, y - 50);
+  angleMode(DEGREES);
+
+  fill(125, 5, 9);
+  noStroke();
+  ellipse(0, -30, 50, 60);
+
+  push();
+  rotate(70);
+  ellipse(0, -30, 50, 60);
+  rotate(70);
+  ellipse(0, -30, 50, 60);
+  rotate(73);
+  ellipse(0, -30, 50, 60);
+  rotate(75);
+  ellipse(0, -30, 50, 60);
+  pop();
+
+  fill(194, 29, 34);
+  stroke(194, 29, 34);
+  strokeWeight(3);
+  ellipse(0, 0, 40);
+
+  pop();
+}
+
+function ladybug(characterX, characterY, flying) {
   angleMode(DEGREES);
 
   if (flying) {
     // black wings
     push();
-    translate(x, y);
+    translate(characterX, characterY);
     stroke(50, 50, 50);
     fill(100, 80, 80);
     beginShape();
@@ -28,7 +97,7 @@ function ladybug(x, y, flying) {
     fill(255, 0, 0);
     strokeWeight(5);
     stroke(255, 0, 0);
-    translate(x, y - 70);
+    translate(characterX, characterY - 70);
     beginShape();
     vertex(0, 0);
     bezierVertex(0, 5, -50, 0, -40, 75);
@@ -75,7 +144,7 @@ function ladybug(x, y, flying) {
     fill(255, 0, 0);
     strokeWeight(5);
     stroke(255, 0, 0);
-    translate(x, y - 70);
+    translate(characterX, characterY - 70);
     beginShape();
     vertex(0, 0);
     bezierVertex(0, 5, -50, 0, -40, 75);
@@ -123,17 +192,17 @@ function ladybug(x, y, flying) {
   // head
   fill(0, 0, 0);
   stroke(0, 0, 0);
-  ellipse(x, y - 30, 120, 90);
+  ellipse(characterX, characterY - 30, 120, 90);
 
   push();
-  translate(x, y - 10);
+  translate(characterX, characterY - 10);
   rotate(45);
   rect(-50, -50, 90, 90, 35);
   pop();
 
   // eyes
   push();
-  translate(x, y - 15);
+  translate(characterX, characterY - 15);
   fill(255, 255, 255);
   noStroke();
   ellipse(-30, 0, 25, 30);
@@ -153,7 +222,7 @@ function ladybug(x, y, flying) {
 
   // legs, left then right
   push();
-  translate(x, y);
+  translate(characterX, characterY);
   strokeWeight(10);
   line(-45, 0, -55, 10);
   line(-55, 10, -40, 40);
@@ -173,16 +242,116 @@ function ladybug(x, y, flying) {
   pop();
 }
 
-function setup() {
-  createCanvas(800, 600);
+function environment() {
+  background(131, 200, 240);
+  push();
+  noStroke();
+  fill(8, 117, 35);
+  ellipse(50, 400, 250, 220);
+  ellipse(200, 410, 200, 200);
+  ellipse(300, 480, 150, 150);
+  ellipse(420, 480, 250, 150);
+  ellipse(620, 450, 250, 200);
+  ellipse(750, 460, 150, 175);
+
+  fill(5, 71, 42);
+  ellipse(220, 560, 200, 200);
+  ellipse(640, 570, 200, 200);
+  ellipse(80, 520, 250, 250);
+  ellipse(480, 570, 250, 200);
+  ellipse(350, 560, 200, 200);
+  ellipse(750, 590, 200, 300);
+  pop();
 }
 
-function draw() {
-  background(131, 200, 240);
+function clouds(cloudsX, cloudsY) {
+  fill(255, 255, 255);
+  noStroke();
+  push();
+  translate(cloudsX, cloudsY);
+  rect(0, -100, 180, 80, 50);
+  ellipse(35, -65, 80, 85);
+  ellipse(90, -80, 100, 105);
+  pop();
+}
+
+function leafRight(x, y) {
+  strokeWeight(3);
+  stroke(21, 155, 22);
+  fill(100, 222, 80);
 
   push();
-  translate(x + 200, y);
-  scale(0.5);
-  ladybug(0, 0, keyIsDown(32));
+  translate(x + 155, y + 200);
+  beginShape();
+  vertex(0, 0);
+  bezierVertex(45, -20, 125, 50, 100, 400);
+  bezierVertex(80, 450, 125, -20, -10, 10);
+  endShape();
   pop();
+
+  push();
+  translate(x, y + 200);
+  beginShape();
+  vertex(-70, 20);
+  bezierVertex(-25, 40, 200, 80, 155, 0);
+  bezierVertex(200, -80, -25, -40, -70, 20);
+  endShape();
+
+  beginShape();
+  vertex(-70, 20);
+  bezierVertex(-15, -15, 140, -30, 155, 0);
+  endShape();
+  pop();
+}
+
+let cloudSpeed = 1;
+let state = "start";
+
+function draw() {
+  if (state === "start") {
+    startScreen();
+    flower(x - 30, y - 25);
+    flower(x + 520, y + 50);
+    flower(x + 50, y + 200);
+  } else if (state === "game") {
+    environment();
+    clouds(cloudsX, cloudsY);
+    clouds(cloudsX + 400, cloudsY + 20);
+
+    leafRight(350, 300);
+
+    push();
+    translate(characterX + 100, characterY);
+    scale(0.5);
+    ladybug(0, 0, keyIsDown(32));
+    pop();
+
+    if (keyIsDown(32)) {
+      characterY = characterY - 2;
+      velocityY = velocityY - 0.7;
+    }
+
+    /*
+  // gravity
+  characterY = characterY + velocityY;
+  velocityY = velocityY + acceleration;
+
+  // clouds moving, and bouncing
+  cloudsX = cloudsX + 1;
+  if (cloudsX > 800) {
+    cloudsX = -600;
+  }
+
+  cloudsY = cloudsY + cloudSpeed / 2;
+  if (cloudsY > 200 || cloudsY < 170) {
+    cloudSpeed = cloudSpeed * -1;
+  }
+    */
+  }
+}
+
+function mouseClicked() {
+  if (mouseX >= 300 && mouseX <= 500 && mouseY >= 250 && mouseY <= 350) {
+    state = "game";
+  }
 }
