@@ -1,7 +1,7 @@
 let x = 200;
 let y = 200;
 
-let characterX = 300;
+let characterX = 400;
 let characterY = 200;
 
 let cloudsX = 100;
@@ -95,6 +95,7 @@ function rulesScreen() {
   text("Use the spacebar to fly.", 210, 245, 380);
   text("And control its movement with the left", 210, 280, 380);
   text("and right arrow keys.", 210, 300, 380);
+
   fill(0);
   textSize(22);
   text("BACK", 330, 505, 140);
@@ -336,7 +337,54 @@ function leafRight(x, y) {
   pop();
 }
 
-function youWin() {}
+function youWin() {
+  background(131, 200, 240);
+  push();
+  fill(255);
+  stroke(18, 116, 181);
+  strokeWeight(5);
+  rect(280, 320, 240, 80, 10);
+  rect(330, 420, 140, 80, 10);
+  fill(227, 244, 255);
+  rect(150, 120, 500, 150, 10);
+
+  noStroke();
+  fill(18, 116, 181);
+  textStyle(BOLD);
+  textFont("Verdana");
+  textAlign(CENTER, CENTER);
+  textSize(24);
+  text("PLAY AGAIN", 280, 320, 240, 80);
+  text("HOME", 330, 420, 140, 80);
+  textSize(44);
+  text("YOU WON", 150, 120, 500, 150);
+
+  pop();
+}
+
+function youLose() {
+  background(255, 227, 228);
+  push();
+  fill(194, 29, 34);
+  stroke(125, 5, 9);
+  strokeWeight(5);
+  rect(280, 320, 240, 80, 10);
+  rect(330, 420, 140, 80, 10);
+  rect(150, 120, 500, 150, 10);
+
+  noStroke();
+  fill(0);
+  textStyle(BOLD);
+  textFont("Verdana");
+  textAlign(CENTER, CENTER);
+  textSize(24);
+  text("TRY AGAIN", 280, 320, 240, 80);
+  text("HOME", 330, 420, 140, 80);
+  textSize(44);
+  text("GAME OVER", 150, 120, 500, 150);
+
+  pop();
+}
 
 let cloudSpeed = 0.7;
 let state = "start";
@@ -361,15 +409,16 @@ function draw() {
     leafRight(350, 300);
 
     push();
-    translate(characterX + 100, characterY);
+    translate(characterX, characterY);
     scale(0.4);
     ladybug(0, 0, keyIsDown(32));
     pop();
 
     if (keyIsDown(32)) {
-      characterY = characterY - 1.5;
-      velocityY = velocityY - 0.7;
+      characterY = characterY - 1.2;
+      velocityY = velocityY - 0.5;
     }
+
     if (keyIsDown(37)) {
       characterX = characterX - 2;
     } else if (keyIsDown(39)) {
@@ -391,17 +440,40 @@ function draw() {
       cloudSpeed = cloudSpeed * -1;
     }
 
-    // character stops if it lands on the leaf
+    /* 
+      win, if you land on the leaf with a certain speed 
+      lose, if you go too fast, or miss the leaf
+      resetting values for the game, to be able to play again
+    */
     if (
+      velocityY < 5 &&
       characterX >= 300 &&
       characterX <= 500 &&
-      characterY >= 470 &&
+      characterY >= 480 &&
       characterY <= 540
     ) {
-      velocityY = 0;
+      state = "youWin";
+      velocityY = 0.2;
+      characterY = 200;
+    } else if (
+      (velocityY > 5 &&
+        characterX >= 300 &&
+        characterX <= 500 &&
+        characterY >= 480 &&
+        characterY <= 540) ||
+      characterY >= 600
+    ) {
+      state = "youLose";
+      velocityY = 0.2;
+      characterY = 200;
     }
   } else if (state === "rules") {
     rulesScreen();
+    flower(650, 170);
+  } else if (state === "youWin") {
+    youWin();
+  } else if (state === "youLose") {
+    youLose();
   }
 }
 
@@ -428,6 +500,32 @@ function mouseClicked() {
     mouseX <= 470 &&
     mouseY >= 480 &&
     mouseY <= 530
+  ) {
+    state = "start";
+  } else if (
+    (state === "youWin" &&
+      mouseX >= 280 &&
+      mouseX <= 520 &&
+      mouseY >= 320 &&
+      mouseY <= 400) ||
+    (state === "youLose" &&
+      mouseX >= 280 &&
+      mouseX <= 520 &&
+      mouseY >= 320 &&
+      mouseY <= 400)
+  ) {
+    state = "game";
+  } else if (
+    (state === "youWin" &&
+      mouseX >= 330 &&
+      mouseX <= 470 &&
+      mouseY >= 420 &&
+      mouseY <= 500) ||
+    (state === "youLose" &&
+      mouseX >= 330 &&
+      mouseX <= 470 &&
+      mouseY >= 420 &&
+      mouseY <= 500)
   ) {
     state = "start";
   }
