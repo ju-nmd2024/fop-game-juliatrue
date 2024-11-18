@@ -2,7 +2,7 @@ let x = 200;
 let y = 200;
 
 let characterX = 400;
-let characterY = 200;
+let characterY = 100;
 
 let cloudsX = 100;
 let cloudsY = 200;
@@ -386,7 +386,7 @@ function youLose() {
   pop();
 }
 
-let cloudSpeed = 0.7;
+let cloudSpeed = 0.5;
 let state = "start";
 
 function draw() {
@@ -430,7 +430,7 @@ function draw() {
     velocityY = velocityY + acceleration;
 
     // clouds moving, and bouncing
-    cloudsX = cloudsX + 0.7;
+    cloudsX = cloudsX + 0.5;
     if (cloudsX > 800) {
       cloudsX = -600;
     }
@@ -454,7 +454,7 @@ function draw() {
     ) {
       state = "youWin";
       velocityY = 0.2;
-      characterY = 200;
+      characterY = 100;
       characterX = 400;
     } else if (
       (velocityY > 5 &&
@@ -466,7 +466,7 @@ function draw() {
     ) {
       state = "youLose";
       velocityY = 0.2;
-      characterY = 200;
+      characterY = 100;
       characterX = 400;
     }
   } else if (state === "rules") {
