@@ -455,6 +455,7 @@ function draw() {
       state = "youWin";
       velocityY = 0.2;
       characterY = 200;
+      characterX = 400;
     } else if (
       (velocityY > 5 &&
         characterX >= 300 &&
@@ -466,6 +467,7 @@ function draw() {
       state = "youLose";
       velocityY = 0.2;
       characterY = 200;
+      characterX = 400;
     }
   } else if (state === "rules") {
     rulesScreen();
